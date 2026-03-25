@@ -1,45 +1,91 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
-Description: >
-  session-log
+Description: SessionLog - Personal trainer session management app
 
-  Sample SAM Template for session-log
-
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 3
+    Timeout: 30
+    Runtime: python3.12
+    Environment:
+      Variables:
+        DYNAMODB_TABLE_NAME: !Ref SessionLogTable
 
-    Tracing: Active
-  Api:
-    TracingEnabled: true
 Resources:
-  HelloWorldFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  # DynamoDB
+  SessionLogTable:
+    Type: AWS::DynamoDB::Table
     Properties:
-      CodeUri: hello_world/
-      Handler: app.lambda_handler
-      Runtime: python3.12
-      Architectures:
-      - x86_64
+      TableName: session-log
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+        - AttributeName: exercise_member
+          AttributeType: S
+        - AttributeName: session_date
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: exercise-member-index
+          KeySchema:
+            - AttributeName: exercise_member
+              KeyType: HASH
+            - AttributeName: session_date
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
+  # Lambda
+  SessionLogFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: main.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SessionLogTable
       Events:
-        HelloWorld:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+        Api:
+          Type: Api
           Properties:
-            Path: /hello
-            Method: get
+            Path: /{proxy+}
+            Method: ANY
+
+  #Cognito
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: session-log-user-pool
+      UsernameAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
+
+  CognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: session-log-client
+      UserPoolId: !Ref CognitoUserPool
+      ExplicitAuthFlows:
+        - ALLOW_USER_PASSWORD_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
 
 Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
-    Description: API Gateway endpoint URL for Prod stage for Hello World 
-      function
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/hello/"
-  HelloWorldFunction:
-    Description: Hello World Lambda Function ARN
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: Implicit IAM Role created for Hello World function
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/"
+  TableName:
+    Description: DynamoDB table name
+    Value: !Ref SessionLogTable
+  UserPoolId:
+    Description: Cognito Userpool ID
+    Value: !Ref CognitoUserPool
+  ClientId:
+    Description: Cognito Client ID
+    Value: !Ref CognitoUserPoolClient
