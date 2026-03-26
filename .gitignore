@@ -139,13 +139,13 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 
- # Python
-  venv/
-  __pycache__/
-  *.pyc
-  *.pyo
-  .env
-  .env.local
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+.env.local
 
-  # AWS
-  .aws-sam/
+# AWS
+.aws-sam/
