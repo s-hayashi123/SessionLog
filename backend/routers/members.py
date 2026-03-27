@@ -18,7 +18,7 @@ def get_member(member_id: str):
     return member_crud.get_member(member_id)
 
 
-@router.post("/")
+@router.post("")
 def create_member(data: dict):
     member_id = str(uuid4())
     member_crud.create_member(member_id, data)
