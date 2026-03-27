@@ -8,7 +8,7 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("")
 def get_members():
     return member_crud.get_members()
 
