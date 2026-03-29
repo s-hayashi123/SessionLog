@@ -1,9 +1,16 @@
-from db import table
+from db import table, to_decimal
 from boto3.dynamodb.conditions import Attr
 
 
 def create_member(member_id: str, data: dict):
-    table.put_item(Item={"PK": f"member#{member_id}", "SK": "profile", **data})
+    table.put_item(
+        Item={
+            "PK": f"member#{member_id}",
+            "SK": "profile",
+            "member_id": member_id,
+            **to_decimal(data),
+        }
+    )
 
 
 def get_members():
@@ -19,6 +26,7 @@ def get_member(member_id: str):
 
 
 def update_member(member_id: str, data: dict):
+    data = to_decimal(data)
     attr_names = {f"#k{i}": k for i, k in enumerate(data)}
     expr_values = {f":v{i}": v for i, (k, v) in enumerate(data.items())}
     update_expr = "SET " + ", ".join(f"#k{i} = :v{i}" for i, k in enumerate(data))
