@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from mangum import Mangum
 
-from routers import members, trainers
+from routers import members, sessions, trainers
 
 app = FastAPI(redirect_slashes=False)
 handler = Mangum(app)
 
 app.include_router(members.router)
+app.include_router(sessions.router)
 app.include_router(trainers.router)
 
 
