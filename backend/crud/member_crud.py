@@ -22,7 +22,7 @@ def get_members():
 
 def get_member(member_id: str):
     res = table.get_item(Key={"PK": f"member#{member_id}", "SK": "profile"})
-    return res.get("Item", {})
+    return res.get("Item")
 
 
 def update_member(member_id: str, data: dict):

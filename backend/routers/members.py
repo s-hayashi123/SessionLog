@@ -1,6 +1,6 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from crud import member_crud
 from uuid import uuid4
 from models.member import MemberCreate, MemberResponse, MemberUpdate
@@ -18,7 +18,10 @@ def get_members():
 
 @router.get("/{member_id}", response_model=MemberResponse)
 def get_member(member_id: str):
-    return member_crud.get_member(member_id)
+    member = member_crud.get_member(member_id)
+    if not member:
+        raise HTTPException(status_code=404, detail="Member not found")
+    return member
 
 
 @router.post("")
