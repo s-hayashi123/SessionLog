@@ -2,7 +2,9 @@
 const config = useRuntimeConfig()
 const base = config.public.apiBase
 
-const { data: members } = await useFetch<any[]>(`${base}/members`)
+import type { Member } from '../../types'
+
+const { data: members } = await useFetch<Member[]>(`${base}/members`)
 const form = reactive({ name: "", age: "", gender: "", height: "", weight: "", body_fat: "", joined_at: "", memo: "" })
 
 const showForm = ref(false)
