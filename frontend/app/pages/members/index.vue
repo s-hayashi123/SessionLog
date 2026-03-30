@@ -10,7 +10,7 @@ const createMember = async () => {
         method: "POST",
         body: form
     })
-    refreshNuxtData()
+    await refreshNuxtData()
 }
 </script>
 <template>
