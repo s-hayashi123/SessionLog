@@ -54,23 +54,3 @@ def update_session(member_id: str, session_date: str, data: dict):
         ExpressionAttributeNames=attr_names,
         ExpressionAttributeValues=expr_values,
     )
-
-
-# def get_member_graph(member_id: str, exercise_id: str):
-#     res = table.query(
-#         IndexName="exercise-member-index",
-#         KeyConditionExpression=Key("exercise_member").eq(
-#             f"member#{member_id}#exercise#{exercise_id}"
-#         ),
-#         ScanIndexForward=True,
-#     )
-#     return res["Items"]
-
-
-# def get_member_body_stats(member_id: str):
-#     res = table.query(
-#         KeyConditionExpression=Key("PK").eq(f"member#{member_id}")
-#         & Key("SK").begins_with("session#"),
-#         ProjectionExpression="weight, body_fat, SK",
-#     )
-#     return res["Items"]

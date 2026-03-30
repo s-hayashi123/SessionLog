@@ -52,13 +52,3 @@ def update_session(member_id: str, session_date: str, data: SessionUpdate):
         member_id, session_date, data.model_dump(exclude_none=True)
     )
     return {"member_id": member_id, "session_date": session_date}
-
-
-# @router.get("/{member_id}/graph")
-# def get_member_graph(member_id: str, exercise_id: str):
-#     return session_crud.get_member_graph(member_id, exercise_id)
-
-
-# @router.get("/{member_id}/body-stats")
-# def get_member_body_stats(member_id: str):
-#     return session_crud.get_member_body_stats(member_id)
