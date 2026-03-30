@@ -21,6 +21,14 @@ def create_session(member_id: str, session_date: str, data: dict):
     )
 
 
+def get_session_details(member_id: str, session_date: str):
+    res = table.query(
+        KeyConditionExpression=Key("PK").eq(f"member#{member_id}")
+        & Key("SK").begins_with(f"detail#{session_date}")
+    )
+    return res["Items"]
+
+
 def create_session_detail(
     member_id: str, session_date: str, exercise_id: str, data: dict
 ):
@@ -47,21 +55,21 @@ def update_session(member_id: str, session_date: str, data: dict):
     )
 
 
-def get_member_graph(member_id: str, exercise_id: str):
-    res = table.query(
-        IndexName="exercise-member-index",
-        KeyConditionExpression=Key("exercise_member").eq(
-            f"member#{member_id}#exercise#{exercise_id}"
-        ),
-        ScanIndexForward=True,
-    )
-    return res["Items"]
+# def get_member_graph(member_id: str, exercise_id: str):
+#     res = table.query(
+#         IndexName="exercise-member-index",
+#         KeyConditionExpression=Key("exercise_member").eq(
+#             f"member#{member_id}#exercise#{exercise_id}"
+#         ),
+#         ScanIndexForward=True,
+#     )
+#     return res["Items"]
 
 
-def get_member_body_stats(member_id: str):
-    res = table.query(
-        KeyConditionExpression=Key("PK").eq(f"member#{member_id}")
-        & Key("SK").begins_with("session#"),
-        ProjectionExpression="weight, body_fat, SK",
-    )
-    return res["Items"]
+# def get_member_body_stats(member_id: str):
+#     res = table.query(
+#         KeyConditionExpression=Key("PK").eq(f"member#{member_id}")
+#         & Key("SK").begins_with("session#"),
+#         ProjectionExpression="weight, body_fat, SK",
+#     )
+#     return res["Items"]
