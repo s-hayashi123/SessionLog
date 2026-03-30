@@ -7,6 +7,7 @@ from models.session import (
     SessionUpdate,
     SessionResponse,
     SessionDetailCreate,
+    SessionDetailResponse,
 )
 
 
@@ -35,6 +36,14 @@ def create_session_detail(member_id: str, session_date: str, data: SessionDetail
         member_id, session_date, data.exercise_id, data.model_dump(exclude_none=True)
     )
     return {"member_id": member_id, "session_date": session_date}
+
+
+@router.get(
+    "/{member_id}/sessions/{session_date}/details",
+    response_model=list[SessionDetailResponse],
+)
+def get_session_details(member_id: str, session_date: str):
+    return session_crud.get_session_details(member_id, session_date)
 
 
 @router.put("/{member_id}/sessions/{session_date}")
