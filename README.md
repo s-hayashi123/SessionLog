@@ -1,6 +1,8 @@
 # SessionLog
 パーソナルトレーナー向けに会員のセッション記録を管理するWebアプリ
 
+今回のポートフォリオで学習した内容のログをNotionに残しています
+Notion: https://www.notion.so/1-32ca879709a181ebb8badd57129ae44c?source=copy_link
 ## 技術スタック 
 - Frontend: Nuxt 4 + Vue 3
 - Backend: FastAPI (Python)
