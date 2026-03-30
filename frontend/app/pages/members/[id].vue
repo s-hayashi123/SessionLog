@@ -1,11 +1,14 @@
 <script setup lang="ts">
 const route = useRoute()
-const { data: member } = await useFetch<any>(`https://98af1h91g3.execute-api.ap-northeast-1.amazonaws.com/Prod/members/${route.params.id}`)
-const { data: sessions } = await useFetch<any[]>(`https://98af1h91g3.execute-api.ap-northeast-1.amazonaws.com/Prod/members/${route.params.id}/sessions`)
+const config = useRuntimeConfig()
+const base = config.public.apiBase
+
+const { data: member } = await useFetch<any>(`${base}/members/${route.params.id}`)
+const { data: sessions } = await useFetch<any[]>(`${base}/members/${route.params.id}/sessions`)
 const form = reactive({ memo: "" })
 
 const createSession = async () => {
-    await $fetch(`https://98af1h91g3.execute-api.ap-northeast-1.amazonaws.com/Prod/members/${route.params.id}/sessions`, {
+    await $fetch(`${base}/members/${route.params.id}/sessions`, {
         method: "POST",
         body: form
     })
@@ -17,7 +20,7 @@ const createSession = async () => {
     <div>
         <h2>{{ member?.name }}</h2>
         <p>年齢: {{ member?.age }}</p>
-        <p>入会日: {{ member?.joined_at }}</p>
+        <p>入会日: {{ member?.joined_at?.slice(0, 10) }}</p>
 
         <h3>セッション登録</h3>
         <form @submit.prevent="createSession">
