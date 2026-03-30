@@ -10,6 +10,7 @@ const createDetail = async () => {
         method: "POST",
         body: form
     })
+    await refreshNuxtData()
 }
 
 const { data: details } = await useFetch<any[]>(`${base}/members/${route.params.id}/sessions/${route.params.session_date}/details`)
