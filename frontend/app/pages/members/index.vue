@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { data: members } = await useFetch<any[]>("http://localhost:8000/members")
+const { data: members } = await useFetch<any[]>("https://98af1h91g3.execute-api.ap-northeast-1.amazonaws.com/Prod/members")
 
 </script>
 <template>

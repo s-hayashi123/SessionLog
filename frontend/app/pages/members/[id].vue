@@ -1,11 +1,11 @@
 <script setup lang="ts">
 const route = useRoute()
-const { data: member } = await useFetch<any>(`http://localhost:8000/members/${route.params.id}`)
-const { data: sessions } = await useFetch<any[]>(`http://localhost:8000/members/${route.params.id}/sessions`)
+const { data: member } = await useFetch<any>(`https://98af1h91g3.execute-api.ap-northeast-1.amazonaws.com/Prod/members/${route.params.id}`)
+const { data: sessions } = await useFetch<any[]>(`https://98af1h91g3.execute-api.ap-northeast-1.amazonaws.com/Prod/members/${route.params.id}/sessions`)
 const form = reactive({ memo: "" })
 
 const createSession = async () => {
-    await $fetch(`http://localhost:8000/members/${route.params.id}/sessions`, {
+    await $fetch(`https://98af1h91g3.execute-api.ap-northeast-1.amazonaws.com/Prod/members/${route.params.id}/sessions`, {
         method: "POST",
         body: form
     })
