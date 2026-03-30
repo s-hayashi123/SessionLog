@@ -17,7 +17,11 @@ const createDetail = async () => {
     await refreshNuxtData()
 }
 
-const { data: details } = await useFetch<any[]>(`${base}/members/${route.params.id}/sessions/${route.params.session_date}/details`)
+import type { Session, SessionDetail } from '../../../../types'
+
+const { data: sessions } = await useFetch<Session[]>(`${base}/members/${route.params.id}/sessions`)
+const session = computed(() => sessions.value?.find(s => s.session_date === route.params.session_date))
+const { data: details } = await useFetch<SessionDetail[]>(`${base}/members/${route.params.id}/sessions/${route.params.session_date}/details`)
 </script>
 
 <template>
@@ -31,7 +35,17 @@ const { data: details } = await useFetch<any[]>(`${base}/members/${route.params.
         <!-- Session Header -->
         <div class="bg-surface-raised border border-border-subtle rounded-xl p-5 mb-6">
             <p class="text-xs text-text-muted uppercase tracking-widest font-500 mb-1">セッション日</p>
-            <h2 class="text-xl font-700 text-text-primary">{{ route.params.session_date }}</h2>
+            <h2 class="text-xl font-700 text-text-primary mb-3">{{ route.params.session_date }}</h2>
+            <div class="grid grid-cols-2 gap-3" v-if="session?.weight || session?.body_fat">
+                <div class="bg-input-bg rounded-lg p-3 text-center">
+                    <p class="text-xs text-text-muted mb-1">体重</p>
+                    <p class="text-lg font-600 text-text-primary">{{ session?.weight ?? '-' }}<span class="text-xs text-text-muted ml-0.5">kg</span></p>
+                </div>
+                <div class="bg-input-bg rounded-lg p-3 text-center">
+                    <p class="text-xs text-text-muted mb-1">体脂肪</p>
+                    <p class="text-lg font-600 text-text-primary">{{ session?.body_fat ?? '-' }}<span class="text-xs text-text-muted ml-0.5">%</span></p>
+                </div>
+            </div>
         </div>
 
         <!-- Add Exercise Form -->

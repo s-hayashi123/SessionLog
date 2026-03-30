@@ -6,6 +6,7 @@ def get_member_sessions(member_id: str):
     res = table.query(
         KeyConditionExpression=Key("PK").eq(f"member#{member_id}")
         & Key("SK").begins_with("session#"),
+        ScanIndexForward=False,
     )
     return res["Items"]
 
