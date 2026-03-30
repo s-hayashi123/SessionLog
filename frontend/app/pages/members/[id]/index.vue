@@ -30,7 +30,11 @@ const createSession = async () => {
 
         <h3>セッション一覧</h3>
         <ul>
-            <li v-for="session in sessions" :key="session.session_date">{{ session.session_date }}</li>
+            <li v-for="session in sessions" :key="session.session_date">
+                <NuxtLink :to="`/members/${route.params.id}/sessions/${session.session_date}`">
+                    {{ session.session_date }}
+                </NuxtLink>
+            </li>
         </ul>
     </div>
 </template>
