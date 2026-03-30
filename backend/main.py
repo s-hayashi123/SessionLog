@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 
-from routers import members, sessions, trainers
+from routers import members, sessions
 
 app = FastAPI(redirect_slashes=False)
 
@@ -20,7 +20,6 @@ handler = Mangum(app)
 
 app.include_router(members.router)
 app.include_router(sessions.router)
-app.include_router(trainers.router)
 
 
 @app.get("/health")
