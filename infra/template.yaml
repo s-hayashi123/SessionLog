@@ -4,7 +4,7 @@ Description: SessionLog - Personal trainer session management app
 
 Globals:
   Function:
-    Timeout: 30
+    Timeout: 5
     Runtime: python3.12
     Environment:
       Variables:
