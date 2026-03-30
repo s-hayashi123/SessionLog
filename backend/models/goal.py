@@ -1,11 +1,22 @@
-from typing import Literal, Optional
+from typing import Literal
 from pydantic import BaseModel
 
 
-class Goal(BaseModel):
-    goal_id: str
+class GoalCreate(BaseModel):
     goal_type: Literal["数値", "定性"]
     title: str
-    target_value: Optional[float] = None
-    current_value: Optional[float] = None
-    memo: Optional[str] = None
+    target_value: float | None = None
+    current_value: float | None = None
+    memo: str | None = None
+
+
+class GoalUpdate(BaseModel):
+    goal_type: Literal["数値", "定性"] | None = None
+    title: str | None = None
+    target_value: float | None = None
+    current_value: float | None = None
+    memo: str | None = None
+
+
+class GoalResponse(GoalCreate):
+    goal_id: str
